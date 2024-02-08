@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Reports</title>
+</head>
+<style>
+    @page {
+    size: a4 portrait;
+    margin: 0.635cm; /* Set margins as needed */
+    /* font-size: 8px; */
+
+   
+}
+
+h1{
+    text-align: center;
+    margin: auto;
+}
+
+hr{
+    margin: 0;
+}
+
+
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  height: auto;
+  margin-top:5px;
+  padding-top: 3px;
+    }  
+
+td{
+    text-align: left;
+    margin: 10px,10px,10px,10px ;
+}
+p{
+    margin: 0;
+}
+h3{
+    margin: 0;
+}
+
+
+</style>
+<body>
+    <div class="header">
+   
+</div>
+
+ 
+    <h1>REPORT OF COLLECTIONS AND DEPOSITS</h1>
+    <div class="row">
+       <table style="border: 0 solid white;">
+        <tr>
+            <td><b>Date:&nbsp;&nbsp;{{ today }}</b></td>
+            <td style="text-align: center;"><b>Report No.:&nbsp;{{ report_no }}</b></td>
+        </tr>
+       </table>
+    </div>
+    <table class="table table-bordered"  id="myTable" width="100%">
+        <thead>
+            <tr>
+                <th width="20%" colspan="2"></th>
+                <th width="5%" colspan="1" rowspan="2">RC</th>
+                <th width="15%" colspan="1" rowspan="2">PAYEE</th>
+                <th width="15%" colspan="1" rowspan="2">PARTICULARS</th>
+                <th width="15%" colspan="1" rowspan="2">AC</th>
+                <th width="30%" colspan="3" rowspan="1">COLLECTIONS</th>
+            </tr>
+            <tr>
+                <th colspan="1"  width="10%">Date</th>
+                <th colspan="1"  width="10%">Number</th>
+                <th colspan="1"  width="11%">2092-101358<hr>(Medicines)</th>
+                <th colspan="1"   width="11%">2092-1025-24<hr>(Services)</th>
+                <th colspan="1"  width="8%">Total</th>
+            </tr>
+           
+        </thead>
+        
+        <tbody>
+            {% for r in report %}
+            <tr>
+
+                <td>{{ r.date }}</td>
+                <td>
+                  {{ r.or_no }}
+                </td>
+                <td></td>
+                {% if r.name is None %}
+                <td>{{ r.patfirst }} {{ r.patlast }}</td>
+                {% else %}
+                <td> {{ r.name }}</td>
+                {% endif %}
+                <td>{{ r.particulars }}</td>
+                <td>{{ r.ac }}</td>
+                {% if r.particulars == 'Drugs & medicine' %}
+                <td>{{ r.amount|intcomma }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+                {% if r.particulars != 'Drugs & medicine' %}
+                <td>{{ r.amount|intcomma }}</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
+                <td>{{ r.amount|intcomma }}</td>
+            </tr>
+            {% endfor %}
+    
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="6"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="6"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="6"><center><b>TOTAL</b></center></td>
+                <td>{{ dm_tot|intcomma }}</td>
+                <td>{{ services_tot|intcomma }}</td>
+                <td>{{ amt_tot|intcomma }}</td>
+            </tr>
+        </tfoot>
+    </table>  
+
+    <br>
+    <h3>Date:&nbsp;&nbsp;{{ date_today }}</h3>
+    <h3>OR No.:&nbsp;&nbsp;{{ first_or }}&nbsp;&nbsp;-&nbsp;&nbsp;{{ last_or }}</h3>
+    <h3>Date Deposited:&nbsp;&nbsp;{{ date_dep }}</h3>
+    <br>
+
+    <table style="margin-left: 25%;">
+
+        <tbody>
+            {% for i in get_rcd %}
+            <tr>
+                <td>{{ i.description }}</td>
+                <td>{{ i.uacs_code }}</td>
+             
+                <td>
+                    {% for u_desc , tot_amt in td %}
+                {% if i.description == u_desc %}
+                    {{ tot_amt|floatformat:2|intcomma }}
+                {% endif %}
+                {% endfor %}
+            </td>
+          
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>  <br>  
+        <p style="text-align: justify;">I hereby certify on my official oath that the above statement of all collections received by me during the period stated above for which Offcial Receipt Nos.                   inclusives, were actually issued by me in the amounts shown thereon. I also certify that I have not received money from whatever sources without having issued the necessary official receipt in acknowledgemnt thereof. Collections received by sub-collectors are recorded above in lumpsum opposite their respective collecting report numbers. I certify further that the balance shown above agrees with the balance appearing in my Cash Receipts Record. A260</p>
+       <br><br>  <br>
+       <center><p>{{ name }}</p></center>
+        <center style="margin: 0;">__________________________________________________________________________</center>
+        <h4 style="text-align: center;">Date</h4>
+</body>
+</html>

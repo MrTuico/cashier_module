@@ -1,0 +1,80 @@
+{% extends 'main_base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+GENERATE REPORTS
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-12"> 
+     <!-- Patien Search Table-->
+     <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Export Report</h6>
+              <button title="mag search po muna bago mag export salamat!" onclick="exportTableToExcel('tabletoexport', '{{ date_today }}.xlsx');" class="btn float-right" style="border-radius: 8px;background-color: rgb(231, 171, 56)"><font color="white"><i class="fa fa-upload"></i>&nbsp;Export to excel</font></button>
+        
+        </div>
+        <form action="{% url 'exportToexcel' %}" method="post">
+            {% csrf_token %}
+       <div class="row m-3">
+        <div class="col-md-3">       
+            <input type="date" name="date-input" value="{{ date_today }}" class="form-control" required>
+            </div>
+          <div class="col-md-1">
+            <button type="submit" title="click me before exporting Thank you!" class="btn btn-primary" ><font color="white"><i class="fa fa-search"></i></font></button>
+            
+          </div>
+       </div>
+      </form>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table border="1" class="table table-striped table-hover"  width="100%" id="tabletoexport">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>OR No.</th>
+                            <th>Payee</th>
+                            <th>Particulars</th>
+                            <th>AC</th>
+                            <th>Medicines</th>
+                            <th>Services</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if data %}
+                        {% for d in data %}
+                        <tr>
+                            <td >{{ d.date }}</td>
+                            <td>{{ d.or_no }}</td>
+                            {% if d.name is None %}
+                            <td>{{ d.patfirst }} {{ d.patmiddle }} {{ d.patlast }}</td>
+                            {% else %}
+                            <td>{{ d.name }}</td>
+                            {% endif %}
+                            <td>{{ d.particulars }}</td>
+                            <td>{{ d.ac }}</td>
+                            {% if d.particulars == 'Drugs & medicine' %}
+                            <td>{{ d.amount|intcomma }}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            {% if d.particulars != 'Drugs & medicine' %}
+                            <td>{{ d.amount|intcomma }}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            <td>{{ d.amount|intcomma }}</td>
+                          </tr>
+                          {% endfor %}
+                          {% else %}
+                          <h4> <font color="red">No Reports Found</font></h4>
+                          {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div> 
+{% endblock %}

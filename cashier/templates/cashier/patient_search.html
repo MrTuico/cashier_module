@@ -1,0 +1,57 @@
+{% extends 'main_base.html' %}
+{% load static %}
+{% block title %}
+Patient Search
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-12"> 
+     <!-- Patien Search Table-->
+     <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Patient Search</h6>
+        </div>
+        <form action="{% url 'home' %}" method="POST">
+            {% csrf_token %}
+       <div class="row">
+            <div class="col-md-3">
+                <input type="text" name="data-input" placeholder="Input Ihomis No. / Lastname" class="form-control m-5" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" style="border-radius: 8px;background-color: rgb(231, 171, 56)" class="form-control m-5">
+               <font color="white"><i class="fa fa-search"></i>Search</font>
+                </button>
+              </div>
+       </div>
+       </form>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>IHOMIS NUMBER</th>
+                            <th>FULLNAME</th>
+                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if data %}
+                            {% for d in data %}
+                            <tr  class="clickable-patient-row"  data-href="{% url 'get_patient_enctr' d.hpercode %}" id="cursor">
+                            <td>{{ d.hpercode }}</td>
+                            
+                            <td>{{ d.patfirst }} {{d.patmiddle}} {{ d.patlast }}</td>
+                              
+                          </tr>
+                          {% endfor %}
+                          {% else %}
+                          <h4> <font color="red">No Patient Found</font></h4>
+                          {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div> 
+{% endblock %}

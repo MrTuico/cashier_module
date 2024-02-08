@@ -1,0 +1,112 @@
+{% extends 'main_base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Receipt Cancelation
+{% endblock %}
+{% block content %}
+
+<div class="row">
+<div class="col-md-12"> 
+     <!-- Patien Search Table-->
+     <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Cancelation of Receipt</h6>
+        </div>
+        <form action="{% url 'cancel_receipt' %}" method="POST">
+            {% csrf_token %}
+       <div class="row m-5">
+            <div class="col-md-3">
+                <input type="number" value="{{ orno_input }}" onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);" name="data_input" placeholder="OR Number" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" style="border-radius: 8px;background-color: rgb(231, 171, 56)" class="btn">
+               <font color="white"><i class="fa fa-search"></i></font>
+                </button>
+              </div>
+       </div>
+       </form>
+       <div class="row m-3">
+        {% if data %}
+        {% for z in data %}
+            <div class="col-md-4">
+                {% if z.name is None %}
+                <h5>Name:&nbsp; <font color="black"><b>{{ z.patfirst }} {{ z.patmiddle }}. {{ z.patlast }}</b></font></h5>
+                {% else %}
+                <h5>Name:&nbsp; <font color="black"><b>{{ z.name }}</b></font></h5>
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                <h5>Date:&nbsp;<font color="black"><b>{{ z.date }}</b></font></h5>
+            </div>
+            <div class="col-md-3">
+                <h5>OR No.:&nbsp;<font color="black"><b>{{ z.or_no }}</b></font></h5>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-danger float-right"data-bs-toggle="modal" data-bs-target="#cancel_receipt"><i class="fa fa-times"></i>&nbsp;Cancel Receipt</button>
+            </div>
+            {% endfor %}
+            {% endif %}
+       </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Amount</th>
+                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if data_line %}
+                            {% for d in data_line %}
+                            <tr  class="clickable-patient-row"  data-href="{% url 'update_or' d.line_id orno_show %}" id="cursor">
+                       
+                                <td><font color="black">{{ d.description }}</font></td>
+                                <td><font color="black">{{ d.amount|intcomma }}</font></td>
+                           </tr>
+                          {% endfor %}
+                          {% else %}
+                          <h4> <font color="red">NO OR NUMBER FOUND</font></h4>
+                          {% endif %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">TOTAL</td>
+                            <td><b>&#8369;&nbsp;<font color="black">{{ tot_amt|intcomma }}</font></b></td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right">Amount Tendered</td>
+                            <td ><b>&#8369;&nbsp;<font color="black">{{ amt_tendered|intcomma }}</font></b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include 'cashier/modal_cancel_receipt.html' %}
+</div>
+</div> 
+	{% for log in messages %}
+{% if log.tags == 'success' %}
+    <script>
+        var d = "{{ log }}";
+    swal("", d, "success");
+    </script>
+
+	{% elif log.tags == 'warning' %}
+
+	<script>
+        var d = "{{ log }}";
+    swal("OOOPS!", d, "warning");
+    </script>
+
+   {% endif %}
+{% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% endblock %}

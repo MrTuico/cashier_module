@@ -1,0 +1,48 @@
+{% load static %}
+<ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <img src="{% static 'img/logo.png' %}" width="30px" height="30px" alt="">
+        </div>
+        <div class="sidebar-brand-text mx-3">BRGHGMC <sup><i class="fas fa-laugh-wink"></i></sup></div>
+    </a>
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'index' %}">
+            <i class="fas fa-search"></i>
+            <span>Home</span></a>
+    </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+        Navigations
+    </div>
+    <li class="nav-item">
+        <a class="nav-link" href="/">
+            <i class="fas fa-search"></i>
+            <span>Patient Search</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'reports' %}">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Generate Report</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'exportToexcel' %}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Export Report</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="/cancel_receipt">
+            <i class="fas fa-receipt"></i>
+            <span>Cancel/Update Receipt</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{%  url 'non_patient' %}">
+            <i class="fa fa-money-bill"></i>
+            <span>Other Payment</span></a>
+    </li>
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+</ul>

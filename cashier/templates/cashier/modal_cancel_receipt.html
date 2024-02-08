@@ -1,0 +1,30 @@
+<!-- Modal -->
+<div class="modal fade" id="cancel_receipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Cancel Receipt Verification!</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+            <div class="col"><font color="red"><b>OR NUMBER:</b></font>&nbsp;<font color="black"><b></b></font></div>
+        </div>
+        <form action="{% url 'verify_or_cancelation' %}" method="post" autocomplete="off">
+          {% csrf_token %}
+        <div>
+          <label>Input Password</label>
+          <input type="text" hidden value="{{ orno_show }}" name="ornum">
+          <input type="password" class="form-control" name="pass_verify"  placeholder="*********" required>
+         
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" >Proceed</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  

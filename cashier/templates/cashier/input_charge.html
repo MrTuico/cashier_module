@@ -1,0 +1,217 @@
+{% extends 'main_base.html' %}
+{% load static %}
+{% block title %}
+INPUT CHARGES
+{% endblock %}
+{% block content %}
+
+{% if error_message %}
+<h4 class="btn">
+  <strong>{{ error_message }}</strong>
+  <a href=""> <font color="red"><i class="fa fa-times"></i></font> </a>
+</h4>
+  {% endif %}
+<div class="row">
+<div class="col-md-12"> 
+    <div class="card">
+        <div class="row">
+            <div class="col-md-7 cart">
+                <div class="title">
+                    <div class="row m-3">
+                       <h4 style="color: rgb(231, 171, 56)"><b>Input Charges</b></h4>
+                    </div>
+                </div>    
+                <div class="row m-3"><h6><b><b><font color="blue">{{ fullname }}</font> - ({{ hospno }}) - {{ encdate }}</b></b></h6></div>
+             
+                    <div class="row m-3">
+                        <div class="col-md-6">
+                            <select  id="cat" class="form-control" >
+                                <option value="" disabled selected>--select here--</option>
+                                {% for r in get_rcd %}
+                                <option value="{{ r.id }},{{ r.description }}">{{ r.description }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" id="amt" class="form-control" placeholder="Amount.." required>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn form-control" style="background-color: rgb(231, 171, 56)" onclick="addData()"><font color="white"><i class="fa fa-plus"></i></font></button>
+                        </div>
+                    </div>
+            </div>
+            
+        <div class="col-md-5 summary">
+            <div class="row m-3" style="color: rgb(231, 171, 56)" ><h5><b>Final Summary of Charges</b></h5></div>
+            <hr class="m-3">
+            <div class="row m-3" id="charges">
+                <!-- <div class="col" style="padding-left:0;" id="display_desc"></div>
+                <div class="col text-right" id="display_amt"></div> -->
+            </div>
+            <div class="row m-3" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                <div class="col">TOTAL AMOUNT</div>
+                <div class="col text-right">&#8369; <span id="totalBill"></span></div>
+            </div>
+            <button type="button" class="btn btn-outline btn-danger m-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Bill Charges</button>
+        </div>
+       
+    </div>
+</div>
+    {% include 'cashier/modal.html' %}
+</div>
+</div> 
+
+<script>
+    set_of_charges = [];
+    set_of_amt = [];
+    input_set_of_charges = [];
+    
+
+    function delArray(num){
+        set_of_charges.splice(num,1);
+        const outputDiv = document.getElementById('charges');
+        outputDiv.innerHTML = ''; // Clear previous content
+        document.getElementById('items').value='';
+        document.getElementById('totalBill').textContent = 0;
+        document.getElementById('totalBill-modal').textContent = 0;
+        set_of_amt = [];
+        input_set_of_charges = [];
+      
+    function updateHTML() {
+     
+        let new_set_of_charges = set_of_charges
+        console.log(new_set_of_charges)
+        new_set_of_charges.forEach((data,index) => {
+        id = data[0];
+        description = data[1];
+        amt = data[2];
+        set_of_amt.push(parseFloat(amt))
+        
+                
+        let desc_display = document.getElementById('charges');
+        let ul_desc = document.createElement('div');
+        ul_desc.className = 'col-8';
+        let li_desc = document.createElement('span');
+        li_desc.textContent = description;
+        ul_desc.appendChild(li_desc);
+        desc_display.appendChild(ul_desc);
+
+        let amt_display = document.getElementById('charges');
+        let ul_amt = document.createElement('div');
+        ul_amt.className = 'col-2 text-right';
+      
+        let li_amt = document.createElement('span');
+        li_amt.textContent = amt;
+        ul_amt.appendChild(li_amt);
+        
+        
+            amt_display.appendChild(ul_amt);
+
+        let del_button_display = document.getElementById('charges');
+        let ul_del_button = document.createElement('div');
+        ul_del_button.className = 'col-2';
+        let li_del_but = document.createElement('i');
+        li_del_but.className = 'fa fa-times';
+        li_del_but.setAttribute('onclick', 'delArray("' + index + '")');
+        ul_del_button.appendChild(li_del_but);
+        del_button_display.appendChild(ul_del_button);
+
+        inputDataArray = {id,description,amt}
+       input_set_of_charges.push(inputDataArray);
+       let itemArray = JSON.stringify(input_set_of_charges);
+        document.getElementById('items').value = itemArray;
+    
+    });
+        new_total_sum_amt = 0; 
+       
+        console.log(set_of_amt)
+        for (let i = 0; i < set_of_amt.length; i++) {
+            new_total_sum_amt += set_of_amt[i];
+            document.getElementById('totalBill').textContent = new_total_sum_amt || 0;
+            document.getElementById('totalBill-modal').textContent = new_total_sum_amt || 0;
+            
+            }
+    }
+    updateHTML();
+   
+   
+    }
+
+    function addData(){
+        let cat = document.getElementById('cat').value;
+        let amt = parseFloat(document.getElementById('amt').value) || 0;
+       if(cat === '' || amt === 0){
+        alert("Please don't leave blank all input fields!")
+        return;
+       }else{
+        let cats = cat.split(',');
+       
+        cats.forEach((value,index) => {
+            const catName = `value${index + 1}`;
+            eval(`${catName} = value`);
+        });
+       
+        var ids = value1
+        var descriptions = value2
+        dataArray = [ids,descriptions,amt];
+        set_of_charges.push(dataArray);
+        set_of_charges.forEach((data,index) => {
+        id = data[0];
+        description = data[1];
+        amt = data[2];
+        i =index;
+    });
+            
+        let desc_display = document.getElementById('charges');
+        let ul_desc = document.createElement('div');
+        ul_desc.className = 'col-8';
+        let li_desc = document.createElement('span');
+        li_desc.textContent = description;
+        ul_desc.appendChild(li_desc);
+        desc_display.appendChild(ul_desc);
+
+        let amt_display = document.getElementById('charges');
+        let ul_amt = document.createElement('div');
+        ul_amt.className = 'col-2 text-right';
+        total_sum_amt = 0; 
+        let li_amt = document.createElement('span');
+        li_amt.textContent = amt;
+        ul_amt.appendChild(li_amt);
+        set_of_amt.push(parseFloat(amt))
+
+        for (let i = 0; i < set_of_amt.length; i++) {
+            total_sum_amt += set_of_amt[i];
+            document.getElementById('totalBill').textContent = total_sum_amt;
+            document.getElementById('totalBill-modal').textContent = total_sum_amt;
+           
+            }
+        amt_display.appendChild(ul_amt);
+        let del_button_display = document.getElementById('charges');
+        let ul_del_button = document.createElement('div');
+        ul_del_button.className = 'col-2';
+        let li_del_but = document.createElement('i');
+        li_del_but.className = 'fa fa-times';
+        li_del_but.setAttribute('onclick', 'delArray("' + i + '")');
+        ul_del_button.appendChild(li_del_but);
+        del_button_display.appendChild(ul_del_button);
+     
+    
+        function clear_input(){
+            document.getElementById('cat').value = "";
+            document.getElementById('amt').value = "";
+        }
+        clear_input();   
+       }
+       
+       console.log(set_of_charges);
+       inputDataArray = {id,description,amt}
+       input_set_of_charges.push(inputDataArray);
+       let itemArray = JSON.stringify(input_set_of_charges);
+        document.getElementById('items').value = itemArray;
+       }
+
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% endblock %}

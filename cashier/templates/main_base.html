@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>CASHIER MODULE |{% block title %} Homepage {% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/logo.png' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
+    <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+    {% include 'includes/header_scripts.html' %}
+    <style>
+        #cursor
+{
+    cursor: pointer;
+}
+    </style>
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include 'includes/nav_bar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'includes/topbar.html' %}
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">CASHIER MODULE</h1>
+                    </div>
+                    {% block content %}
+
+                    {% endblock %}
+                </div>
+           
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            {% include 'includes/footer.html' %}
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    {% include 'includes/log_out.html' %}
+    {% include 'includes/footer_scripts.html' %}
+</body>
+<script>
+    $(document).ready(function() {
+      $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+      });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+      $(".clickable-patient-row").click(function() {
+        window.location = $(this).data("href");
+      });
+    });
+</script>
+<script>
+    $('#payment').keyup(function(){
+      var payment = $('#payment').val();
+      var amount =$('#totalBill-modal').text();
+    //   console.log(amount)
+        var total = payment - amount;
+
+       $('#change').text(total.toFixed(2));
+              });
+
+  </script>
+<script>
+    function exportTableToExcel(tabletoexport, filename = '{{ date_today }}.xlsx') {
+      const table = document.getElementById(tabletoexport);
+      const wb = XLSX.utils.table_to_book(table);
+      return XLSX.writeFile(wb, filename);
+    }
+    </script>
+
+<script language="javascript" type="text/javascript">
+  function limitText(limitField, limitNum) {
+      if(limitField.value.length > limitNum) 
+      {
+          limitField.value = limitField.value.substring(0, limitNum);
+      }
+  }
+</script>
+<!-- {% for log in messages %}
+{% if log.tags == 'success' %}
+    <script>
+        var d = "{{ log }}";
+    swal("GOOD JOB!", d, "success");
+    </script>
+   {% endif %}
+{% endfor %} -->
+
+<script>
+    $('.update').click(function(){
+      var amt = $('#amt').val();
+      var prts = $('#particular').val();
+    //   console.log(amt,prt)
+      $('#amt_val').val(amt)
+      $('#particular_val').val(prts)
+   
+              });
+  </script>
+</html>

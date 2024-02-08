@@ -1,0 +1,46 @@
+{% extends 'main_base.html' %}
+{% load static %}
+{% block title %}
+DATE OF CHARGES
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col-md-12"> 
+     <!-- Patien Search Table-->
+     <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Date of Charges</h6>
+        </div>
+        <div class="m-5"><h5>Patient name:&nbsp;&nbsp;<b><font color="blue">{{ fullname }}</font> - ({{ hospno }})</b></h5></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped" id="date_charge" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>TOE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if enctrData %}
+                        {% for c in enctrData %}
+                        <!-- <tr  class="clickable-row"  data-href="{% url 'get_patient_charges' c.enccode %}"> -->
+                            <tr  class="clickable-row"  data-href="{% url 'input_charges' c.enccode c.encdate %}" id="cursor">
+                            <td>{{ c.encdate }}</td>
+                            <td>{{ c.toecode }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <h4><font color="red">NO DATE FOUND!</font></h4>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock %}
