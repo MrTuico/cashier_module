@@ -10,22 +10,16 @@
 <style>
     @page {
     size: a4 portrait;
-    margin: 0.635cm; /* Set margins as needed */
-    /* font-size: 8px; */
-
-   
+    margin: 0.635cm; 
+    font-size: 8px;
 }
-
 h1{
     text-align: center;
     margin: auto;
 }
-
 hr{
     margin: 0;
 }
-
-
 table {
   border: 1px solid black;
   border-collapse: collapse;
@@ -44,15 +38,10 @@ p{
 h3{
     margin: 0;
 }
-
-
 </style>
 <body>
     <div class="header">
-   
 </div>
-
- 
     <h1>REPORT OF COLLECTIONS AND DEPOSITS</h1>
     <div class="row">
        <table style="border: 0 solid white;">
@@ -62,56 +51,82 @@ h3{
         </tr>
        </table>
     </div>
-    <table class="table table-bordered"  id="myTable" width="100%">
+    <table class="table table-bordered"  id="myTable" style="width:100%">
         <thead>
             <tr>
-                <th width="20%" colspan="2"></th>
-                <th width="5%" colspan="1" rowspan="2">RC</th>
-                <th width="15%" colspan="1" rowspan="2">PAYEE</th>
-                <th width="15%" colspan="1" rowspan="2">PARTICULARS</th>
-                <th width="15%" colspan="1" rowspan="2">AC</th>
-                <th width="30%" colspan="3" rowspan="1">COLLECTIONS</th>
+                <th style="width:20%" colspan="2"></th>
+                <th style="width:5%"colspan="1" rowspan="2">RC</th>
+                <th style="width:15%" colspan="1" rowspan="2">PAYEE</th>
+                <th style="width:15%" colspan="1" rowspan="2">PARTICULARS</th>
+                <th style="width:15%" colspan="1" rowspan="2">AC</th>
+                <th style="width:30%" colspan="3" rowspan="1">COLLECTIONS</th>
             </tr>
             <tr>
-                <th colspan="1"  width="10%">Date</th>
-                <th colspan="1"  width="10%">Number</th>
-                <th colspan="1"  width="11%">2092-101358<hr>(Medicines)</th>
-                <th colspan="1"   width="11%">2092-1025-24<hr>(Services)</th>
-                <th colspan="1"  width="8%">Total</th>
+                <th colspan="1"  style="width:10%">Date</th>
+                <th colspan="1"  style="width:10%">Number</th>
+                <th colspan="1"  style="width:11%">2092-101358<hr>(Medicines)</th>
+                <th colspan="1"  style="width:11%">2092-1025-24<hr>(Services)</th>
+                <th colspan="1"  style="width:8%">Total</th>
             </tr>
-           
         </thead>
-        
         <tbody>
             {% for r in report %}
             <tr>
-
                 <td>{{ r.date }}</td>
                 <td>
                   {{ r.or_no }}
                 </td>
                 <td></td>
                 {% if r.name is None %}
-                <td>{{ r.patfirst }} {{ r.patlast }}</td>
+                <td>
+                    {% if r.status == 'CANCELLED' %}
+                    <font color="red">CANCELLED</font>
+                    {% else %}
+                    {{ r.patfirst }} {{ r.patlast }}
+                    {% endif %}
+                </td>
                 {% else %}
-                <td> {{ r.name }}</td>
+                <td> 
+                    {% if r.status == 'CANCELLED' %}
+                    <font color="red">CANCELLED</font>
+                    {% else %}
+                   {{ r.name }}
+                    {% endif %}
+                </td>
                 {% endif %}
                 <td>{{ r.particulars }}</td>
                 <td>{{ r.ac }}</td>
                 {% if r.particulars == 'Drugs & medicine' %}
-                <td>{{ r.amount|intcomma }}</td>
+                <td>
+                    {% if r.status == 'CANCELLED' %}
+                    <font color="red">0</font>
+                    {% else %}
+                    {{ r.amount|intcomma }}
+                    {% endif %}
+                </td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
                 {% if r.particulars != 'Drugs & medicine' %}
-                <td>{{ r.amount|intcomma }}</td>
+                <td>
+                    {% if r.status == 'CANCELLED' %}
+                    <font color="red">0</font>
+                    {% else %}
+                    {{ r.amount|intcomma }}
+                    {% endif %}
+                </td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
-                <td>{{ r.amount|intcomma }}</td>
+                <td>
+                    {% if r.status == 'CANCELLED' %}
+                    <font color="red">0</font>
+                    {% else %}
+                    {{ r.amount|intcomma }}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
-    
         </tbody>
         <tfoot>
             <tr>
@@ -140,21 +155,17 @@ h3{
             </tr>
         </tfoot>
     </table>  
-
     <br>
     <h3>Date:&nbsp;&nbsp;{{ date_today }}</h3>
     <h3>OR No.:&nbsp;&nbsp;{{ first_or }}&nbsp;&nbsp;-&nbsp;&nbsp;{{ last_or }}</h3>
     <h3>Date Deposited:&nbsp;&nbsp;{{ date_dep }}</h3>
     <br>
-
     <table style="margin-left: 25%;">
-
         <tbody>
             {% for i in get_rcd %}
             <tr>
                 <td>{{ i.description }}</td>
                 <td>{{ i.uacs_code }}</td>
-             
                 <td>
                     {% for u_desc , tot_amt in td %}
                 {% if i.description == u_desc %}
@@ -162,7 +173,6 @@ h3{
                 {% endif %}
                 {% endfor %}
             </td>
-          
             </tr>
             {% endfor %}
         </tbody>

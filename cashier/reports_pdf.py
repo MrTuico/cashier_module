@@ -13,7 +13,7 @@ from xhtml2pdf import pisa
 from itertools import groupby
 from operator import itemgetter
 
-root = "http://172.22.10.11:9091/"
+root = "http://173.10.2.108:9092/"
 reportsOfColandDepByUser = root + "api/cashop/reportsOfCollectionsandDepositsByUser"
 cashop_api_showRCD= root + "api/cashop/showRCD"
 reportsOfColandDepByUser2 = root + "api/cashop/reportsOfCollectionsandDepositsByUser2"
@@ -25,10 +25,11 @@ def generate_rcd_report(request):
     today = datetime.strftime(now, '%B %d, %Y')
     if request.method == 'POST':
         date_input = request.POST.get('date-input')
+        date_object = datetime.strptime(date_input, "%Y-%m-%d").date()
         if date_input is None:
             date_today = datetime.strftime(now, '%Y-%m-%d')
         else:
-            date_today =date_input
+            date_today =date_object
         showRCD = requests.post(cashop_api_showRCD).json()
         if showRCD['status'] == 'success':
             get_rcd  = showRCD['data']
@@ -43,7 +44,7 @@ def generate_rcd_report(request):
         last_ornum = ''
         if get_reports['status'] == 'success' and get_reports2['status'] == 'success':
             data = get_reports['data']
-            data2=get_reports2['data']
+            data2=get_reports2['data']            
             concat_data = data + data2
             try:
                 sort_data = sorted(concat_data, key=lambda x: x['or_no'])
@@ -52,26 +53,40 @@ def generate_rcd_report(request):
                 first_ornum = first_ornum_i['or_no']
                 last_ornum = last_ornum_i['or_no']
             except IndexError:
-                print("Something went wrong")
+                print("Something went wrong with first and last or number")
             total_desc = {}
-            
             for d in concat_data:
                 d['ac'] = d['ac'].replace("-"," - ")
                 ac_desc = d['particulars']
-                total_amt_init = float(d['amount'])
-                total_amt += total_amt_init
+                if d['status'] == 'CANCELLED':
+                    d['amount'] = 0
+                    total_amt_init = float(d['amount'])
+                    total_amt += total_amt_init
+                else:
+                    total_amt_init = float(d['amount'])
+                    total_amt += total_amt_init
                 if d['particulars'] == 'Drugs & medicine':
-                    particular_init = float(d['amount'])
-                    total_dm += particular_init
+                    if d['status'] == 'CANCELLED':
+                        d['amount'] = 0
+                        particular_init = float(d['amount'])
+                        total_dm += particular_init
+                    else:
+                        particular_init = float(d['amount'])
+                        total_dm += particular_init
                 if d['particulars'] != 'Drugs & medicine':
-                    services_init = float(d['amount'])
-                    total_sercices += services_init
+                    if d['status'] == 'CANCELLED':
+                        d['amount'] = 0
+                        services_init = float(d['amount'])
+                        total_sercices += services_init
+                    else:
+                        services_init = float(d['amount'])
+                        total_sercices += services_init
                 # print(ac_desc)
                 if ac_desc in total_desc:
                     total_desc[ac_desc] += total_amt_init
                 else:   
                     total_desc[ac_desc] = total_amt_init
-                
+            
     template_path = 'cashier/report_pdf.html'
     context = {'date_dep':request.session['date_dep'],'report_no':request.session['report_no'],'name':request.session['name'],'last_or':last_ornum,'first_or':first_ornum,'today':today,'td':total_desc.items(),'get_rcd':get_rcd,'report':sort_data,'date_today':date_today,'dm_tot':round(total_dm,2),'services_tot':round(total_sercices,2),'amt_tot':round(total_amt,2)}
     response = HttpResponse(content_type='application/pdf')

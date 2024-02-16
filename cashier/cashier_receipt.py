@@ -9,7 +9,6 @@ from reportlab.lib.pagesizes import letter
 from datetime import date, datetime, time
 
 def cahier_or(request):
-    
     buf = io.BytesIO()
     c = canvas.Canvas(buf)
     response = HttpResponse(content_type='application/pdf')
@@ -55,7 +54,6 @@ def cahier_or(request):
         #     c.setFont("Times-Bold", 10, leading=None)
         #     c.drawString(0.3*inch, 7.5*inch, "RADIOLOGY")
         #     c.drawString(3*inch, 7.5*inch,rad)
-
     c.showPage()
     c.save()
     pdf = buf.getvalue()

@@ -15,7 +15,7 @@ from reportlab.lib.colors import blue, gray, whitesmoke,white,black
 from reportlab.lib.units import inch
 from django.contrib.auth.decorators import login_required
 
-root = "http://172.22.10.11:9091/"
+root = "http://173.10.2.108:9092/"
 cashop_api = root + "api/cashop/lookup"
 cashop_api_charges = root + "api/cashop/charges2"
 cashop_api_ecntr = root + "api/cashop/encounter"
@@ -330,15 +330,14 @@ def payment(request):
             enctr = enccode.replace("/","-")
             getPatientCharges = requests.post(cashop_api_charges,data = {'enctr': enccode}).json()
             showRCD = requests.post(cashop_api_showRCD).json()
-            # print(showRCD)
             if showRCD['status'] == 'success':
                 get_rcd  = showRCD['data']
                 get_patient_name = getPatientCharges['data']['patient']
             for y in get_patient_name:
                 fullname = y['patfirst']+" "+y['patmiddle']+" "+y['patlast']
                 hospno = y['hpercode']
-            
             results = requests.post(save_payment,data = {'enccode': enccode,'items':items,'payment':payment,'orno':orno,'entryby':request.session['employee_id']}).json()
+            # print(results)
             # receipt
             if results['status'] == 'success':
                 request.session['or_no'] = str(int(orno) + 1).zfill(len(orno))
@@ -408,7 +407,6 @@ def payment(request):
                 # receipt
             elif results['status'] == 'failed':
                 return HttpResponseRedirect("/dup_or")
-            
             return render(request, 'cashier/input_charge.html',{'user':request.session['name'],'get_rcd':get_rcd,'fullname':fullname,'hospno':hospno,'enctr':enccode})
         return HttpResponseRedirect("/")
     else:
@@ -583,96 +581,100 @@ def update_or(request,line_id,orno):
     
 def non_patient(request):
     if request.session.get('employee_id') is not None:
-        now = datetime.now()
-        date_today = datetime.strftime(now, '%Y-%m-%d')
-        showRCD = requests.post(cashop_api_showRCD).json()
-        if showRCD['status'] == 'success':
-            get_rcd  = showRCD['data']
-        if request.method == 'POST':
-            name = request.POST.get('fullname').upper()
-            items = request.POST.get('items')
-            payment = request.POST.get('payment')
-            orno = request.POST.get('orno')
-            date_now = request.POST.get('date_today')
-            total_bill = request.POST.get('total_bill')
-            check_duplicate = requests.post(reportsOfColandDep,data = {'date':date_now}).json()
-            # print(check_duplicate)
-            chkDup_data = check_duplicate['data']
-            for k in chkDup_data:
-                dup_or_no = k['or_no']
-                if orno == dup_or_no:
-                    return HttpResponseRedirect("/dup_or")
-            results = requests.post(otherPayment,data = {'items':items,'payment':payment,'orno':orno,'entryby':request.session['employee_id'],'total_amount':total_bill,'name':name}).json()
-            # receipt
-            if results['status'] == 'success':
-                request.session['or_no'] = str(int(orno) + 1).zfill(len(orno))
-                payment_id = results['payment_id']
-                getReceipt = requests.post(print_receipt2,data = {'payment_id':payment_id}).json()
-                # print(getReceipt)
-                get_fullname = getReceipt['details']['name']
-                get_date = getReceipt['details']['date']
-                get_total_amt = str(getReceipt['details']['total_amount'])
-                get_inWords = getReceipt['details']['InWords']
-                get_line_item = getReceipt['line']
-                # print(get_line_item)
-                now = datetime.now()
-                time_ended = datetime.strftime(now, '%I:%M %p')
-                date_2day = datetime.strftime(now, '%B %d, %Y')
-                buf = io.BytesIO()
-                c = canvas.Canvas(buf)
-                response = HttpResponse(content_type='application/pdf')
-                c.setTitle("OFFICIAL RECEIPT")
-                c.setPageSize((4*inch, 8*inch))
-                c.setFillColor("black")# time started:
-                c.setFont("Times-Roman", 8, leading=None)
-                c.drawString(0.29*inch, 6.2*inch, "Time Started:")
-                c.drawString(1*inch, 6.2*inch,request.session['start_time'])
-                c.setFillColor("black")# time ended:
-                c.setFont("Times-Roman", 8, leading=None)
-                c.drawString(0.29*inch, 6.1*inch, "Time Ended:")
-                c.drawString(1*inch, 6.1*inch, time_ended)
-                c.setFillColor("black")#brghgmc
-                c.setFont("Times-Roman", 9, leading=None)
-                c.drawString(0.8*inch, 5.77*inch, "Bicol Region General Hospital")
-                c.setFillColor("black")# brghgmc
-                c.setFont("Times-Roman", 9, leading=None)
-                c.drawString(0.8*inch, 5.67*inch, "and Geriatric Medical Center")
-                c.setFillColor("black")# fullname
-                c.setFont("Times-Roman", 12, leading=None)
-                c.drawString(0.6*inch, 5.4*inch, get_fullname)
-                c.setFillColor("black")# date
-                c.setFont("Times-Roman", 10, leading=None)
-                c.drawString(1.85*inch, 6.1*inch, date_2day)
-                c.setFillColor("black")# total_amount
-                c.setFont("Times-Roman", 12, leading=None)
-                c.drawString(3*inch, 3*inch, get_total_amt)
-                c.setFillColor("black")# cashier 
-                c.setFont("Times-Roman", 12, leading=None)
-                c.drawString(1.2*inch, 1.1*inch, request.session['name'] )
-
-                c.setFillColor("black")# cashier 
-                c.setFont("Times-Roman", 7.5, leading=None)
-                c.drawString(0.4*inch, 2.48*inch, get_inWords)
-                a = 4.8
-                b= 0.2
-                for i in get_line_item:
-                    c.setFillColor("black")# description
-                    c.setFont("Times-Roman", 12, leading=None)
-                    c.drawString(0.35*inch, a*inch,i['description'])
-                    c.setFillColor("black")# amount_item
-                    c.setFont("Times-Roman", 12, leading=None)
-                    c.drawString(3.15*inch, a*inch,str(i['amount']))
-                    a-=b
-                c.showPage()
-                c.save()
-                pdf = buf.getvalue()
-                buf.close()
-                response.write(pdf)
-                return response
+        if request.session.get('or_no') is not None:
+            or_no = request.session['or_no']
+            now = datetime.now()
+            date_today = datetime.strftime(now, '%Y-%m-%d')
+            showRCD = requests.post(cashop_api_showRCD).json()
+            if showRCD['status'] == 'success':
+                get_rcd  = showRCD['data']
+            if request.method == 'POST':
+                name = request.POST.get('fullname').upper()
+                items = request.POST.get('items')
+                payment = request.POST.get('payment')
+                orno = request.POST.get('orno')
+                date_now = request.POST.get('date_today')
+                total_bill = request.POST.get('total_bill')
+                check_duplicate = requests.post(reportsOfColandDep,data = {'date':date_now}).json()
+                # print(check_duplicate)
+                chkDup_data = check_duplicate['data']
+                for k in chkDup_data:
+                    dup_or_no = k['or_no']
+                    if orno == dup_or_no:
+                        return HttpResponseRedirect("/dup_or")
+                results = requests.post(otherPayment,data = {'items':items,'payment':payment,'orno':orno,'entryby':request.session['employee_id'],'total_amount':total_bill,'name':name}).json()
                 # receipt
-            elif results['status'] == 'failed':
-                return HttpResponseRedirect("/dup_or")
-        return render(request, 'cashier/non_patient.html',{'or_no':request.session['or_no'],'now_date':date_today,'user':request.session['name'],'get_rcd':get_rcd,})
+                if results['status'] == 'success':
+                    request.session['or_no'] = str(int(orno) + 1).zfill(len(orno))
+                    payment_id = results['payment_id']
+                    getReceipt = requests.post(print_receipt2,data = {'payment_id':payment_id}).json()
+                    # print(getReceipt)
+                    get_fullname = getReceipt['details']['name']
+                    get_date = getReceipt['details']['date']
+                    get_total_amt = str(getReceipt['details']['total_amount'])
+                    get_inWords = getReceipt['details']['InWords']
+                    get_line_item = getReceipt['line']
+                    # print(get_line_item)
+                    now = datetime.now()
+                    time_ended = datetime.strftime(now, '%I:%M %p')
+                    date_2day = datetime.strftime(now, '%B %d, %Y')
+                    buf = io.BytesIO()
+                    c = canvas.Canvas(buf)
+                    response = HttpResponse(content_type='application/pdf')
+                    c.setTitle("OFFICIAL RECEIPT")
+                    c.setPageSize((4*inch, 8*inch))
+                    c.setFillColor("black")# time started:
+                    c.setFont("Times-Roman", 8, leading=None)
+                    c.drawString(0.29*inch, 6.2*inch, "Time Started:")
+                    c.drawString(1*inch, 6.2*inch,request.session['start_time'])
+                    c.setFillColor("black")# time ended:
+                    c.setFont("Times-Roman", 8, leading=None)
+                    c.drawString(0.29*inch, 6.1*inch, "Time Ended:")
+                    c.drawString(1*inch, 6.1*inch, time_ended)
+                    c.setFillColor("black")#brghgmc
+                    c.setFont("Times-Roman", 9, leading=None)
+                    c.drawString(0.8*inch, 5.77*inch, "Bicol Region General Hospital")
+                    c.setFillColor("black")# brghgmc
+                    c.setFont("Times-Roman", 9, leading=None)
+                    c.drawString(0.8*inch, 5.67*inch, "and Geriatric Medical Center")
+                    c.setFillColor("black")# fullname
+                    c.setFont("Times-Roman", 12, leading=None)
+                    c.drawString(0.6*inch, 5.4*inch, get_fullname)
+                    c.setFillColor("black")# date
+                    c.setFont("Times-Roman", 10, leading=None)
+                    c.drawString(1.85*inch, 6.1*inch, date_2day)
+                    c.setFillColor("black")# total_amount
+                    c.setFont("Times-Roman", 12, leading=None)
+                    c.drawString(3*inch, 3*inch, get_total_amt)
+                    c.setFillColor("black")# cashier 
+                    c.setFont("Times-Roman", 12, leading=None)
+                    c.drawString(1.2*inch, 1.1*inch, request.session['name'] )
+
+                    c.setFillColor("black")# cashier 
+                    c.setFont("Times-Roman", 7.5, leading=None)
+                    c.drawString(0.4*inch, 2.48*inch, get_inWords)
+                    a = 4.8
+                    b= 0.2
+                    for i in get_line_item:
+                        c.setFillColor("black")# description
+                        c.setFont("Times-Roman", 12, leading=None)
+                        c.drawString(0.35*inch, a*inch,i['description'])
+                        c.setFillColor("black")# amount_item
+                        c.setFont("Times-Roman", 12, leading=None)
+                        c.drawString(3.15*inch, a*inch,str(i['amount']))
+                        a-=b
+                    c.showPage()
+                    c.save()
+                    pdf = buf.getvalue()
+                    buf.close()
+                    response.write(pdf)
+                    return response
+                    # receipt
+                elif results['status'] == 'failed':
+                    return HttpResponseRedirect("/dup_or")
+            return render(request, 'cashier/non_patient.html',{'or_no':or_no,'now_date':date_today,'user':request.session['name'],'get_rcd':get_rcd,})
+        else:
+            return HttpResponseRedirect("/index")     
     else:
         return HttpResponseRedirect("/auth_login")
 

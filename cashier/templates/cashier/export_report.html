@@ -7,12 +7,10 @@ GENERATE REPORTS
 {% block content %}
 <div class="row">
 <div class="col-md-12"> 
-     <!-- Patien Search Table-->
      <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Export Report</h6>
               <button title="mag search po muna bago mag export salamat!" onclick="exportTableToExcel('tabletoexport', '{{ date_today }}.xlsx');" class="btn float-right" style="border-radius: 8px;background-color: rgb(231, 171, 56)"><font color="white"><i class="fa fa-upload"></i>&nbsp;Export to excel</font></button>
-        
         </div>
         <form action="{% url 'exportToexcel' %}" method="post">
             {% csrf_token %}
@@ -21,8 +19,7 @@ GENERATE REPORTS
             <input type="date" name="date-input" value="{{ date_today }}" class="form-control" required>
             </div>
           <div class="col-md-1">
-            <button type="submit" title="click me before exporting Thank you!" class="btn btn-primary" ><font color="white"><i class="fa fa-search"></i></font></button>
-            
+            <button type="submit" title="click me before exporting Thank you!" class="btn btn-primary" ><font color="white"><i class="fa fa-search"></i></font></button> 
           </div>
        </div>
       </form>

@@ -3,11 +3,9 @@
 {% block title %}
 DATE OF CHARGES
 {% endblock %}
-
 {% block content %}
 <div class="row">
 <div class="col-md-12"> 
-     <!-- Patien Search Table-->
      <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Date of Charges</h6>
@@ -25,7 +23,6 @@ DATE OF CHARGES
                     <tbody>
                         {% if enctrData %}
                         {% for c in enctrData %}
-                        <!-- <tr  class="clickable-row"  data-href="{% url 'get_patient_charges' c.enccode %}"> -->
                             <tr  class="clickable-row"  data-href="{% url 'input_charges' c.enccode c.encdate %}" id="cursor">
                             <td>{{ c.encdate }}</td>
                             <td>{{ c.toecode }}</td>
@@ -41,6 +38,4 @@ DATE OF CHARGES
     </div>
 </div>
 </div>
-
-
 {% endblock %}

@@ -16,16 +16,13 @@
 	<img class="wave" src="{% static 'img/wave.png' %}">
 	<div class="container">
 		<div class="img">
-			<!-- <img src="{% static 'img/bg.svg' %}"> -->
 			<img src="{% static 'img/logo.png' %}">
 		</div>
-		
 		<div class="login-content">
 			
 			<form action="{% url 'auth_login' %}" method="POST" autocomplete="off">
 				{% csrf_token %}
 				<img src="{% static 'img/undraw_profile_3.svg' %}">
-				<!-- <img src="{% static 'img/logo.png' %}"> -->
 				<h2 class="title">Login</h2>
            		<div class="input-div one">
            		   <div class="i">
@@ -57,22 +54,16 @@
         var d = "{{ log }}";
     swal("", d, "success");
     </script>
-
 	{% elif log.tags == 'warning' %}
-
 	<script>
         var d = "{{ log }}";
     swal("OOOPS!", d, "warning");
     </script>
-
-	
 {% elif log.tags == 'error' %}
-
 <script>
 	var d = "{{ log }}";
 swal("OOOPS!", d, "warning");
 </script>
-
    {% endif %}
 {% endfor %}
 </body>

@@ -1,10 +1,8 @@
-<!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">Payment</h5>
-        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="btn btn-danger fa fa-times"></i></button> -->
       </div>
       <div>
         <font color="red"><span id="p_er" hidden>PLEASE INPUT THE RIGHT AMOUNT</span></font>
@@ -13,7 +11,6 @@
         <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
           <div class="col"><font color="red"><b>TOTAL AMOUNT</b></font></div>
           <div class="col text-right"><b>&#8369; <span id="totalBill-modal"></span></b></div>
-
       </div>
       <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
         <div class="col"><font color="red"><b>CHANGE</b></font></div>
@@ -23,7 +20,6 @@
         {% csrf_token %}
       <div>
         <label>OR No.</label>
-        <!-- <input type="text" id="totalBill-input" name="total_bill" > -->
         {% if or_no is None %}
         <input type="number" class="form-control" name="orno"  onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);" placeholder="insert or number here.." required>
         {% else %}
@@ -32,15 +28,14 @@
         <br> 
         <label>Amount Tendered</label>
         <input type="number" class="form-control" name="payment" id="payment" placeholder="insert amount here.." required>
-        <input type="text" value="{{ enctr }}" name="enccode">
-        <input type="text" id="items" name="items" class="form-control">
-        <input type="date" name="date_today" value="{{ now_date }}">
-       
+        <input type="hidden" value="{{ enctr }}" name="enccode">
+        <input type="hidden" id="items" name="items" class="form-control">
+        <input type="hidden" name="date_today" value="{{ now_date }}">
       </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="submit"  class="btn btn-success" >Proceed</button>
+        <button type="submit" id="proceed" class="btn btn-success" disabled >Proceed</button>
       </div>
     </form>
     </div>

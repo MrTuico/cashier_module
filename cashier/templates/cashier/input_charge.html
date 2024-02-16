@@ -4,7 +4,6 @@
 INPUT CHARGES
 {% endblock %}
 {% block content %}
-
 {% if error_message %}
 <h4 class="btn">
   <strong>{{ error_message }}</strong>
@@ -22,7 +21,6 @@ INPUT CHARGES
                     </div>
                 </div>    
                 <div class="row m-3"><h6><b><b><font color="blue">{{ fullname }}</font> - ({{ hospno }}) - {{ encdate }}</b></b></h6></div>
-             
                     <div class="row m-3">
                         <div class="col-md-6">
                             <select  id="cat" class="form-control" >
@@ -40,7 +38,6 @@ INPUT CHARGES
                         </div>
                     </div>
             </div>
-            
         <div class="col-md-5 summary">
             <div class="row m-3" style="color: rgb(231, 171, 56)" ><h5><b>Final Summary of Charges</b></h5></div>
             <hr class="m-3">
@@ -54,19 +51,16 @@ INPUT CHARGES
             </div>
             <button type="button" class="btn btn-outline btn-danger m-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Bill Charges</button>
         </div>
-       
     </div>
 </div>
     {% include 'cashier/modal.html' %}
 </div>
 </div> 
-
 <script>
+   
     set_of_charges = [];
     set_of_amt = [];
     input_set_of_charges = [];
-    
-
     function delArray(num){
         set_of_charges.splice(num,1);
         const outputDiv = document.getElementById('charges');
@@ -76,18 +70,14 @@ INPUT CHARGES
         document.getElementById('totalBill-modal').textContent = 0;
         set_of_amt = [];
         input_set_of_charges = [];
-      
     function updateHTML() {
-     
         let new_set_of_charges = set_of_charges
         console.log(new_set_of_charges)
         new_set_of_charges.forEach((data,index) => {
         id = data[0];
         description = data[1];
         amt = data[2];
-        set_of_amt.push(parseFloat(amt))
-        
-                
+        set_of_amt.push(parseFloat(amt))   
         let desc_display = document.getElementById('charges');
         let ul_desc = document.createElement('div');
         ul_desc.className = 'col-8';
@@ -95,18 +85,13 @@ INPUT CHARGES
         li_desc.textContent = description;
         ul_desc.appendChild(li_desc);
         desc_display.appendChild(ul_desc);
-
         let amt_display = document.getElementById('charges');
         let ul_amt = document.createElement('div');
         ul_amt.className = 'col-2 text-right';
-      
         let li_amt = document.createElement('span');
         li_amt.textContent = amt;
         ul_amt.appendChild(li_amt);
-        
-        
-            amt_display.appendChild(ul_amt);
-
+        amt_display.appendChild(ul_amt);
         let del_button_display = document.getElementById('charges');
         let ul_del_button = document.createElement('div');
         ul_del_button.className = 'col-2';
@@ -115,28 +100,21 @@ INPUT CHARGES
         li_del_but.setAttribute('onclick', 'delArray("' + index + '")');
         ul_del_button.appendChild(li_del_but);
         del_button_display.appendChild(ul_del_button);
-
         inputDataArray = {id,description,amt}
        input_set_of_charges.push(inputDataArray);
        let itemArray = JSON.stringify(input_set_of_charges);
         document.getElementById('items').value = itemArray;
-    
     });
         new_total_sum_amt = 0; 
-       
         console.log(set_of_amt)
         for (let i = 0; i < set_of_amt.length; i++) {
             new_total_sum_amt += set_of_amt[i];
             document.getElementById('totalBill').textContent = new_total_sum_amt || 0;
-            document.getElementById('totalBill-modal').textContent = new_total_sum_amt || 0;
-            
+            document.getElementById('totalBill-modal').textContent = new_total_sum_amt || 0; 
             }
     }
     updateHTML();
-   
-   
     }
-
     function addData(){
         let cat = document.getElementById('cat').value;
         let amt = parseFloat(document.getElementById('amt').value) || 0;
@@ -145,12 +123,10 @@ INPUT CHARGES
         return;
        }else{
         let cats = cat.split(',');
-       
         cats.forEach((value,index) => {
             const catName = `value${index + 1}`;
             eval(`${catName} = value`);
         });
-       
         var ids = value1
         var descriptions = value2
         dataArray = [ids,descriptions,amt];
@@ -161,7 +137,6 @@ INPUT CHARGES
         amt = data[2];
         i =index;
     });
-            
         let desc_display = document.getElementById('charges');
         let ul_desc = document.createElement('div');
         ul_desc.className = 'col-8';
@@ -169,7 +144,6 @@ INPUT CHARGES
         li_desc.textContent = description;
         ul_desc.appendChild(li_desc);
         desc_display.appendChild(ul_desc);
-
         let amt_display = document.getElementById('charges');
         let ul_amt = document.createElement('div');
         ul_amt.className = 'col-2 text-right';
@@ -178,12 +152,10 @@ INPUT CHARGES
         li_amt.textContent = amt;
         ul_amt.appendChild(li_amt);
         set_of_amt.push(parseFloat(amt))
-
         for (let i = 0; i < set_of_amt.length; i++) {
             total_sum_amt += set_of_amt[i];
             document.getElementById('totalBill').textContent = total_sum_amt;
             document.getElementById('totalBill-modal').textContent = total_sum_amt;
-           
             }
         amt_display.appendChild(ul_amt);
         let del_button_display = document.getElementById('charges');
@@ -194,24 +166,18 @@ INPUT CHARGES
         li_del_but.setAttribute('onclick', 'delArray("' + i + '")');
         ul_del_button.appendChild(li_del_but);
         del_button_display.appendChild(ul_del_button);
-     
-    
         function clear_input(){
             document.getElementById('cat').value = "";
             document.getElementById('amt').value = "";
         }
         clear_input();   
        }
-       
        console.log(set_of_charges);
        inputDataArray = {id,description,amt}
        input_set_of_charges.push(inputDataArray);
        let itemArray = JSON.stringify(input_set_of_charges);
         document.getElementById('items').value = itemArray;
        }
-
     </script>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 {% endblock %}

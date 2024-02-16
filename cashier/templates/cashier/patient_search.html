@@ -6,7 +6,6 @@ Patient Search
 {% block content %}
 <div class="row">
 <div class="col-md-12"> 
-     <!-- Patien Search Table-->
      <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold" style="color: rgb(231, 171, 56)">Patient Search</h6>
@@ -31,7 +30,6 @@ Patient Search
                         <tr>
                             <th>IHOMIS NUMBER</th>
                             <th>FULLNAME</th>
-                         
                         </tr>
                     </thead>
                     <tbody>
@@ -39,9 +37,7 @@ Patient Search
                             {% for d in data %}
                             <tr  class="clickable-patient-row"  data-href="{% url 'get_patient_enctr' d.hpercode %}" id="cursor">
                             <td>{{ d.hpercode }}</td>
-                            
                             <td>{{ d.patfirst }} {{d.patmiddle}} {{ d.patlast }}</td>
-                              
                           </tr>
                           {% endfor %}
                           {% else %}

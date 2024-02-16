@@ -21,48 +21,23 @@
 }
     </style>
 </head>
-
 <body id="page-top">
-    <!-- Page Wrapper -->
     <div id="wrapper">
-
-        <!-- Sidebar -->
         {% include 'includes/nav_bar.html' %}
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
-                <!-- Topbar -->
                 {% include 'includes/topbar.html' %}
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">CASHIER MODULE</h1>
                     </div>
                     {% block content %}
-
                     {% endblock %}
                 </div>
-           
-                <!-- /.container-fluid -->
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
             {% include 'includes/footer.html' %}
-            <!-- End of Footer -->
         </div>
-        <!-- End of Content Wrapper -->
     </div>
-    <!-- End of Page Wrapper -->
-    <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
@@ -89,10 +64,8 @@
       var amount =$('#totalBill-modal').text();
     //   console.log(amount)
         var total = payment - amount;
-
        $('#change').text(total.toFixed(2));
               });
-
   </script>
 <script>
     function exportTableToExcel(tabletoexport, filename = '{{ date_today }}.xlsx') {
@@ -101,7 +74,6 @@
       return XLSX.writeFile(wb, filename);
     }
     </script>
-
 <script language="javascript" type="text/javascript">
   function limitText(limitField, limitNum) {
       if(limitField.value.length > limitNum) 
@@ -110,23 +82,12 @@
       }
   }
 </script>
-<!-- {% for log in messages %}
-{% if log.tags == 'success' %}
-    <script>
-        var d = "{{ log }}";
-    swal("GOOD JOB!", d, "success");
-    </script>
-   {% endif %}
-{% endfor %} -->
-
 <script>
     $('.update').click(function(){
       var amt = $('#amt').val();
       var prts = $('#particular').val();
-    //   console.log(amt,prt)
       $('#amt_val').val(amt)
       $('#particular_val').val(prts)
-   
               });
   </script>
 </html>

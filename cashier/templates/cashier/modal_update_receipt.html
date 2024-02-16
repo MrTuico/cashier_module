@@ -1,4 +1,3 @@
-<!-- Modal -->
 <div class="modal fade" id="update_receipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -13,13 +12,11 @@
           {% csrf_token %}
         <div>
           <label>Input Password</label>
-         
           <input type="password" class="form-control" name="pass_verify"  placeholder="*********" required>
           <input type="hidden" value="{{ line_id }}" name="line_id">
           <input type="hidden" value="{{ payment_id }}" name="payment_id">
           <input type="hidden" id="amt_val" name="amount">
           <input type="hidden" id="particular_val" name="particular">
-         
         </div>
         </div>
         <div class="modal-footer">
