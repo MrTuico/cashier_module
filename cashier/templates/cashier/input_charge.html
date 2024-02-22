@@ -4,6 +4,9 @@
 INPUT CHARGES
 {% endblock %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 {% if error_message %}
 <h4 class="btn">
   <strong>{{ error_message }}</strong>
@@ -22,19 +25,19 @@ INPUT CHARGES
                 </div>    
                 <div class="row m-3"><h6><b><b><font color="blue">{{ fullname }}</font> - ({{ hospno }}) - {{ encdate }}</b></b></h6></div>
                     <div class="row m-3">
-                        <div class="col-md-6">
-                            <select  id="cat" class="form-control" >
-                                <option value="" disabled selected>--select here--</option>
+                        <div class="col-md-6 ">
+                            <select  type="text" id="cat" class="oks" style="width:100%;padding: 12px 20px;margin: 8px 0;box-sizing: border-box;" >
+                                <option value="">--select here--</option>
                                 {% for r in get_rcd %}
                                 <option value="{{ r.id }},{{ r.description }}">{{ r.description }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="number" id="amt" class="form-control" placeholder="Amount.." required>
+                            <input type="number" id="amt" style="width: 100%;" placeholder="Amount.." required>
                         </div>
                         <div class="col-md-2">
-                            <button class="btn form-control" style="background-color: rgb(231, 171, 56)" onclick="addData()"><font color="white"><i class="fa fa-plus"></i></font></button>
+                            <button type="button" style="border: none;border-radius: 12px;width:100%;background-color: rgb(231, 171, 56)" onclick="addData()"><font color="white"><i class="fa fa-plus"></i></font></button>
                         </div>
                     </div>
             </div>
@@ -57,7 +60,10 @@ INPUT CHARGES
 </div>
 </div> 
 <script>
-   
+    jQuery(document).ready(function($)  {
+    $('.oks').select2();
+});
+
     set_of_charges = [];
     set_of_amt = [];
     input_set_of_charges = [];

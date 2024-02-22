@@ -13,28 +13,28 @@ Patient Search
           <h5 class="modal-title" id="staticBackdropLabel">Report and OR Number</h5>
         </div>
         <div class="modal-body">
-        <form action="{% url 'index' %}" method="post" autocomplete="off">
+        <form action="{% url 'index' %}" method="post">
           {% csrf_token %}
         <div>
           <label>Report Number</label>
           {% if report is None %}
-          <input type="text" class="form-control" name="rep_no">
+          <input type="text" class="form-control" name="rep_no" required>
           {% else %}
-            <input type="text" class="form-control" name="rep_no" value="{{ report }}">
+            <input type="text" class="form-control" name="rep_no" value="{{ report }}"required>
           {% endif %}
           <br>
           <label >OR Number</label>
           {% if or_no is None %}
-          <input type="number" class="form-control" onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);"  name="or_no">
+          <input type="number" class="form-control" onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);"  name="or_no"required >
           {% else %}
-          <input type="number" class="form-control" name="or_no" onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);" value="{{ or_no }}">
+          <input type="number" class="form-control" name="or_no" onKeyDown="limitText(this,7);" onKeyUp="limitText(this,7);" value="{{ or_no }}"required>
           {% endif %}
           <br>
           <label >Date Deposit</label>
           {% if or_no is None %}
-          <input type="date" class="form-control" name="date">
+          <input type="date" class="form-control" name="date"required>
           {% else %}
-          <input type="date" class="form-control" name="date" value="{{ date }}">
+          <input type="date" class="form-control" name="date" value="{{ date }}" required>
           {% endif %}
         </div>
         </div>
@@ -52,6 +52,5 @@ Patient Search
       $('#input').modal('show');
     });
 </script>
-
 {% endblock %}
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views , cashier_receipt, reports_pdf
+from . import views , cashier_receipt, reports_pdf,uis
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path('get_final_charges', views.get_final_charges, name='get_final_charges'),
     path('<str:enccode>/<str:encdate>/input_charges', views.input_charges, name='input_charges'),
     path('cashier_or', cashier_receipt.cahier_or, name='cashier_or'),
+    path('uis', uis.uis, name='uis'),
     path('payment', views.payment, name='payment'),
     path('exportToexcel', views.exportToexcel, name='exportToexcel'),
     path('reports', views.reports, name='reports'),

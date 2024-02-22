@@ -37,7 +37,6 @@ reportsOfColandDep2 = root + "api/cashop/reportsOfCollectionsandDeposits2"
 reportsOfColandDepByUser2 = root + "api/cashop/reportsOfCollectionsandDepositsByUser2"
 
 def index(request):
-
     if request.session.get('employee_id') is not None:
         if request.session.get('report_no') is None:
             request.session['report_no'] = ''
@@ -53,6 +52,7 @@ def index(request):
             request.session['date_dep'] = ''
         else:
             request.session['date_dep'] = request.session['date_dep']
+        
         if request.method =='POST':
             report_num = request.POST.get('rep_no')
             or_num = request.POST.get('or_no')
@@ -97,8 +97,8 @@ def auth_login(request):
                     #     return HttpResponseRedirect('/')
                     # elif login_json_response['data'][0]['user_level'] == 6:#PHILHEATH
                     #     return HttpResponseRedirect('/')
-                    # elif login_json_response['data'][0]['user_level'] == 16:#CASHIERING
-                    #     return HttpResponseRedirect('/')
+                    elif login_json_response['data'][0]['user_level'] == 16:#CASHIERING
+                        return HttpResponseRedirect('index')
                     # elif login_json_response['data'][0]['user_level'] == 2:#NURSING
                     #     return HttpResponseRedirect('/')
                     # elif login_json_response['data'][0]['user_level'] == 11:#CSSR
